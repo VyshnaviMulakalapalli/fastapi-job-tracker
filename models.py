@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
 from config import Base
@@ -10,6 +10,8 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
     password = Column(String)
+    is_verified = Column(Boolean, default=False)
+    verification_token = Column(String)
 
     jobs = relationship("JobApplication", back_populates="user")
 
