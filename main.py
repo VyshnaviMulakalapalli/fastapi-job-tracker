@@ -5,8 +5,9 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from auth import get_db, create_access_token, hash_password, get_user, verify_password
 from models import User, JobApplication
 from config import engine, Base
-from auth import get_current_user
+from auth import get_current_user, generate_verification_token
 from typing import List
+from celery_worker import send_verification_email
 
 # Initialize FastAPI
 app = FastAPI()
@@ -49,11 +50,13 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     new_user = User(
         username=user.username,
         email=user.email,
-        password=hash_password(user.password)  # Hash password
+        password=hash_password(user.password),  # Hash password
+        verification_token=generate_verification_token()
     )
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+    send_verification_email.delay(new_user.email, new_user.verification_token)
     return new_user
 
 # User login endpoint
@@ -109,3 +112,14 @@ def delete_application(app_id: int, db: Session = Depends(get_db), current_user:
     db.delete(application)
     db.commit()
     return application
+
+@app.get("/verify-email")
+def verify_email(token: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.verification_token == token).first()
+    if user is None:
+        raise HTTPException(status_code=400, detail="Invalid token or user not found")
+    user.is_verified = True
+    user.verification_token = None  # Clear the token after verification
+    db.commit()
+    return {"message": "Email verified successfully!"}
+
