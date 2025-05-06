@@ -67,32 +67,44 @@ Note: Use a Gmail App Password if 2FA is enabled.
 
 4. Set Up PostgreSQL: Make sure PostgreSQL is running and create the database:
 
-`CREATE DATABASE job_tracker;`
+```bash
+CREATE DATABASE job_tracker;
+```
 
 Update config.py and alembic.ini if your DB credentials differ.
 
 5. Run Database Migrations
 
-`alembic upgrade head`
+```bash
+alembic upgrade head
+```
 
 6. Start Redis (for Celery)
 
 On Ubuntu/Debian
 
-`sudo service redis-server start`
+```bash
+sudo service redis-server start
+```
 
 Or via Docker
 
-`docker run -p 6379:6379 redis`
+```bash
+docker run -p 6379:6379 redis
+```
 
 
 7. Start Celery Worker
 
-`celery -A celery_worker.celery worker --loglevel=info`
+```bash
+celery -A celery_worker.celery worker --loglevel=info
+```
 
 8. Run the FastAPI Application
 
-`uvicorn main:app --reload`
+```bash
+uvicorn main:app --reload
+```
 
 
 ## API Endpoints
