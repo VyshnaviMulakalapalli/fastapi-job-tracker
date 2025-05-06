@@ -41,6 +41,7 @@ A modern, full-featured web API for tracking job applications, built with FastAP
 ```bash
 git clone https://github.com/yourusername/job-application-tracker.git
 cd job-application-tracker
+```
 
 2. Install Dependencies
 
@@ -48,6 +49,7 @@ cd job-application-tracker
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
 
 3. Configure Environment Variables
 Create a .env file in the root directory:
@@ -58,6 +60,7 @@ EMAIL_PASSWORD=YOUR_PASSWORD
 SECRET_KEY = YOUR_SECRET_KEY
 ALGORITHM = YOUR_ALGORITHM
 ACCESS_TOKEN_EXPIRE_MINUTES = YOUR_ACCESS_TOKEN_EXPIRE_MINUTES
+```
 
 
 Note: Use a Gmail App Password if 2FA is enabled.
